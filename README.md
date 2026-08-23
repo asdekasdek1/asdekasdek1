@@ -67,3 +67,18 @@ contract Toggle {
         emit Toggled(state, msg.sender);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract EventCounter {
+    uint256 public count;
+    mapping(address => uint256) public userCounts;
+
+    event Incremented(address indexed user, uint256 newTotal, uint256 userTotal);
+
+    function increment() external {
+        count += 1;
+        userCounts[msg.sender] += 1;
+        emit Incremented(msg.sender, count, userCounts[msg.sender]);
+    }
+}

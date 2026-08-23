@@ -187,4 +187,25 @@ contract Calculator {
         require(b > 0, "Cannot divide by zero");
         return a / b;
     }
+}// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Rating {
+    mapping(address => uint256) public ratings;
+    mapping(address => bool) public hasRated;
+
+    event Rated(address indexed user, uint256 score);
+
+    function rate(uint256 score) external {
+        require(score >= 1 && score <= 5, "Score must be 1-5");
+        require(!hasRated[msg.sender], "Already rated");
+
+        hasRated[msg.sender] = true;
+        ratings[msg.sender] = score;
+        emit Rated(msg.sender, score);
+    }
+
+    function getRating(address user) external view returns (uint256) {
+        return ratings[user];
+    }
 }

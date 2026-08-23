@@ -15,3 +15,12 @@ Este repositorio sirve para coordinar actividades, dar la bienvenida a nuevos mi
 - Foco en productos reales y usabilidad
 
 Ideal para iterar rápido y experimentar.
+
+# Links útiles
+
+- Docs: https://docs.base.org
+- Bridge: https://bridge.base.org
+- Explorer: https://basescan.org
+- Status: https://status.base.org
+
+Mantendremos esta lista actualizada.

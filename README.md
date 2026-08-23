@@ -145,3 +145,24 @@ contract ScoreBoard {
         return scores[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract CounterWithLimit {
+    uint256 public count;
+    uint256 public constant MAX_COUNT = 100;
+
+    event Incremented(uint256 newCount);
+    event Reset();
+
+    function increment() external {
+        require(count < MAX_COUNT, "Max limit reached");
+        count += 1;
+        emit Incremented(count);
+    }
+
+    function reset() external {
+        count = 0;
+        emit Reset();
+    }
+}

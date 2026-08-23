@@ -102,3 +102,24 @@ contract Timestamp {
         return block.timestamp - lastUpdate;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Greeter {
+    string private greeting;
+
+    event GreetingUpdated(string newGreeting, address indexed by);
+
+    constructor(string memory initialGreeting) {
+        greeting = initialGreeting;
+    }
+
+    function setGreeting(string calldata newGreeting) external {
+        greeting = newGreeting;
+        emit GreetingUpdated(newGreeting, msg.sender);
+    }
+
+    function greet() external view returns (string memory) {
+        return greeting;
+    }
+}

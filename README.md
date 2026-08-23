@@ -209,3 +209,20 @@ contract Rating {
         return ratings[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Bookmark {
+    mapping(address => string) public bookmarks;
+
+    event BookmarkSet(address indexed user, string url);
+
+    function setBookmark(string calldata url) external {
+        bookmarks[msg.sender] = url;
+        emit BookmarkSet(msg.sender, url);
+    }
+
+    function getBookmark(address user) external view returns (string memory) {
+        return bookmarks[user];
+    }
+}

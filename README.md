@@ -49,3 +49,21 @@ contract Counter {
         emit CountChanged(count, msg.sender);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Toggle {
+    bool public isActive;
+
+    event Toggled(bool newState, address indexed by);
+
+    function toggle() external {
+        isActive = !isActive;
+        emit Toggled(isActive, msg.sender);
+    }
+
+    function setState(bool state) external {
+        isActive = state;
+        emit Toggled(state, msg.sender);
+    }
+}

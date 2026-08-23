@@ -82,3 +82,23 @@ contract EventCounter {
         emit Incremented(msg.sender, count, userCounts[msg.sender]);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Timestamp {
+    uint256 public lastUpdate;
+    address public lastUpdater;
+
+    event Updated(address indexed user, uint256 timestamp);
+
+    function update() external {
+        lastUpdate = block.timestamp;
+        lastUpdater = msg.sender;
+        emit Updated(msg.sender, block.timestamp);
+    }
+
+    function getTimeSinceUpdate() external view returns (uint256) {
+        if (lastUpdate == 0) return 0;
+        return block.timestamp - lastUpdate;
+    }
+}

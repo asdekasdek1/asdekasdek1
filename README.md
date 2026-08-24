@@ -226,3 +226,25 @@ contract Bookmark {
         return bookmarks[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract NotePad {
+    mapping(address => string) public notes;
+
+    event NoteUpdated(address indexed user, string note);
+
+    function writeNote(string calldata note) external {
+        notes[msg.sender] = note;
+        emit NoteUpdated(msg.sender, note);
+    }
+
+    function readNote(address user) external view returns (string memory) {
+        return notes[user];
+    }
+
+    function clearNote() external {
+        notes[msg.sender] = "";
+        emit NoteUpdated(msg.sender, "");
+    }
+}

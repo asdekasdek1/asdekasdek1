@@ -248,3 +248,20 @@ contract NotePad {
         emit NoteUpdated(msg.sender, "");
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract FavoriteColor {
+    mapping(address => string) public colors;
+
+    event ColorSet(address indexed user, string color);
+
+    function setColor(string calldata color) external {
+        colors[msg.sender] = color;
+        emit ColorSet(msg.sender, color);
+    }
+
+    function getColor(address user) external view returns (string memory) {
+        return colors[user];
+    }
+}

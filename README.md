@@ -291,3 +291,26 @@ contract PingPong {
         emit Pong(msg.sender);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract StepCounter {
+    mapping(address => uint256) public steps;
+
+    event StepsAdded(address indexed user, uint256 amount, uint256 total);
+
+    function addSteps(uint256 amount) external {
+        require(amount > 0, "Amount must be > 0");
+        steps[msg.sender] += amount;
+        emit StepsAdded(msg.sender, amount, steps[msg.sender]);
+    }
+
+    function getSteps(address user) external view returns (uint256) {
+        return steps[user];
+    }
+
+    function resetSteps() external {
+        steps[msg.sender] = 0;
+        emit StepsAdded(msg.sender, 0, 0);
+    }
+}

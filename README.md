@@ -265,3 +265,29 @@ contract FavoriteColor {
         return colors[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract PingPong {
+    string public lastAction;
+    address public lastPlayer;
+    uint256 public pingCount;
+    uint256 public pongCount;
+
+    event Ping(address indexed player);
+    event Pong(address indexed player);
+
+    function ping() external {
+        lastAction = "ping";
+        lastPlayer = msg.sender;
+        pingCount += 1;
+        emit Ping(msg.sender);
+    }
+
+    function pong() external {
+        lastAction = "pong";
+        lastPlayer = msg.sender;
+        pongCount += 1;
+        emit Pong(msg.sender);
+    }
+}

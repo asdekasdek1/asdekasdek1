@@ -314,3 +314,30 @@ contract StepCounter {
         emit StepsAdded(msg.sender, 0, 0);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Temperature {
+    int256 public temperature;
+    address public lastUpdater;
+
+    event TemperatureUpdated(int256 newTemp, address indexed by);
+
+    function setTemperature(int256 temp) external {
+        temperature = temp;
+        lastUpdater = msg.sender;
+        emit TemperatureUpdated(temp, msg.sender);
+    }
+
+    function increase(int256 amount) external {
+        temperature += amount;
+        lastUpdater = msg.sender;
+        emit TemperatureUpdated(temperature, msg.sender);
+    }
+
+    function decrease(int256 amount) external {
+        temperature -= amount;
+        lastUpdater = msg.sender;
+        emit TemperatureUpdated(temperature, msg.sender);
+    }
+}

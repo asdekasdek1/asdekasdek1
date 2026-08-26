@@ -356,3 +356,26 @@ contract CoinFlip {
         return (result, won);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract GreetingCard {
+    string public message;
+    address public author;
+    uint256 public createdAt;
+
+    event CardCreated(address indexed author, string message);
+
+    constructor(string memory initialMessage) {
+        message = initialMessage;
+        author = msg.sender;
+        createdAt = block.timestamp;
+        emit CardCreated(msg.sender, initialMessage);
+    }
+
+    function updateMessage(string calldata newMessage) external {
+        require(msg.sender == author, "Only author");
+        message = newMessage;
+        emit CardCreated(msg.sender, newMessage);
+    }
+}

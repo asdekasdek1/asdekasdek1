@@ -400,3 +400,23 @@ contract CounterReset {
         emit Reset(resetCount);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract LevelSystem {
+    mapping(address => uint256) public experience;
+    mapping(address => uint256) public level;
+
+    event ExperienceGained(address indexed user, uint256 amount, uint256 newLevel);
+
+    function gainExperience(uint256 amount) external {
+        experience[msg.sender] += amount;
+        uint256 newLevel = experience[msg.sender] / 100;
+        level[msg.sender] = newLevel;
+        emit ExperienceGained(msg.sender, amount, newLevel);
+    }
+
+    function getStats(address user) external view returns (uint256 exp, uint256 lvl) {
+        return (experience[user], level[user]);
+    }
+}

@@ -341,3 +341,18 @@ contract Temperature {
         emit TemperatureUpdated(temperature, msg.sender);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract CoinFlip {
+    enum Side { Heads, Tails }
+
+    event FlipResult(address indexed player, Side choice, Side result, bool won);
+
+    function flip(Side choice) external view returns (Side result, bool won) {
+        uint256 random = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, msg.sender)));
+        result = Side(random % 2);
+        won = (choice == result);
+        return (result, won);
+    }
+}

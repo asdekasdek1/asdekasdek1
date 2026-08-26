@@ -420,3 +420,33 @@ contract LevelSystem {
         return (experience[user], level[user]);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract PointSystem {
+    mapping(address => uint256) public points;
+    address public owner;
+
+    event PointsAdded(address indexed user, uint256 amount);
+    event PointsSpent(address indexed user, uint256 amount);
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    function addPoints(address user, uint256 amount) external {
+        require(msg.sender == owner, "Not owner");
+        points[user] += amount;
+        emit PointsAdded(user, amount);
+    }
+
+    function spendPoints(uint256 amount) external {
+        require(points[msg.sender] >= amount, "Not enough points");
+        points[msg.sender] -= amount;
+        emit PointsSpent(msg.sender, amount);
+    }
+
+    function getPoints(address user) external view returns (uint256) {
+        return points[user];
+    }
+}

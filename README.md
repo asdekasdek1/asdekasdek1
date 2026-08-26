@@ -379,3 +379,24 @@ contract GreetingCard {
         emit CardCreated(msg.sender, newMessage);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract CounterReset {
+    uint256 public count;
+    uint256 public resetCount;
+
+    event Incremented(uint256 newCount);
+    event Reset(uint256 timesReset);
+
+    function increment() external {
+        count += 1;
+        emit Incremented(count);
+    }
+
+    function reset() external {
+        count = 0;
+        resetCount += 1;
+        emit Reset(resetCount);
+    }
+}

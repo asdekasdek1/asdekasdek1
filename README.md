@@ -513,3 +513,28 @@ contract Mute {
         return muted[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Reputation {
+    mapping(address => int256) public reputation;
+    mapping(address => mapping(address => bool)) public hasVoted;
+
+    event ReputationChanged(address indexed user, int256 change, int256 newRep);
+
+    function upvote(address user) external {
+        require(user != msg.sender, "Cannot vote yourself");
+        require(!hasVoted[msg.sender][user], "Already voted");
+        hasVoted[msg.sender][user] = true;
+        reputation[user] += 1;
+        emit ReputationChanged(user, 1, reputation[user]);
+    }
+
+    function downvote(address user) external {
+        require(user != msg.sender, "Cannot vote yourself");
+        require(!hasVoted[msg.sender][user], "Already voted");
+        hasVoted[msg.sender][user] = true;
+        reputation[user] -= 1;
+        emit ReputationChanged(user, -1, reputation[user]);
+    }
+}

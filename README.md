@@ -450,3 +450,33 @@ contract PointSystem {
         return points[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Streak {
+    mapping(address => uint256) public lastAction;
+    mapping(address => uint256) public streak;
+
+    event StreakUpdated(address indexed user, uint256 newStreak);
+
+    function action() external {
+        uint256 today = block.timestamp / 1 days;
+
+        if (lastAction[msg.sender] == today) {
+            return;
+        }
+
+        if (lastAction[msg.sender] + 1 == today) {
+            streak[msg.sender] += 1;
+        } else {
+            streak[msg.sender] = 1;
+        }
+
+        lastAction[msg.sender] = today;
+        emit StreakUpdated(msg.sender, streak[msg.sender]);
+    }
+
+    function getStreak(address user) external view returns (uint256) {
+        return streak[user];
+    }
+}

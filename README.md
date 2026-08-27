@@ -480,3 +480,36 @@ contract Streak {
         return streak[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Mute {
+    mapping(address => bool) public muted;
+    address public admin;
+
+    event Muted(address indexed user);
+    event Unmuted(address indexed user);
+
+    constructor() {
+        admin = msg.sender;
+    }
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Not admin");
+        _;
+    }
+
+    function mute(address user) external onlyAdmin {
+        muted[user] = true;
+        emit Muted(user);
+    }
+
+    function unmute(address user) external onlyAdmin {
+        muted[user] = false;
+        emit Unmuted(user);
+    }
+
+    function isMuted(address user) external view returns (bool) {
+        return muted[user];
+    }
+}

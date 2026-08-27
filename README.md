@@ -567,3 +567,22 @@ contract Session {
         return block.timestamp - sessionStart[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Karma {
+    mapping(address => int256) public karma;
+
+    event KarmaChanged(address indexed user, int256 change, int256 newKarma);
+
+    function giveKarma(address user, int256 amount) external {
+        require(user != msg.sender, "Cannot give to yourself");
+        require(amount != 0, "Amount cannot be zero");
+        karma[user] += amount;
+        emit KarmaChanged(user, amount, karma[user]);
+    }
+
+    function getKarma(address user) external view returns (int256) {
+        return karma[user];
+    }
+}

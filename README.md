@@ -538,3 +538,32 @@ contract Reputation {
         emit ReputationChanged(user, -1, reputation[user]);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Session {
+    mapping(address => uint256) public sessionStart;
+    mapping(address => bool) public isActive;
+
+    event SessionStarted(address indexed user, uint256 timestamp);
+    event SessionEnded(address indexed user, uint256 duration);
+
+    function startSession() external {
+        require(!isActive[msg.sender], "Session already active");
+        sessionStart[msg.sender] = block.timestamp;
+        isActive[msg.sender] = true;
+        emit SessionStarted(msg.sender, block.timestamp);
+    }
+
+    function endSession() external {
+        require(isActive[msg.sender], "No active session");
+        uint256 duration = block.timestamp - sessionStart[msg.sender];
+        isActive[msg.sender] = false;
+        emit SessionEnded(msg.sender, duration);
+    }
+
+    function getDuration(address user) external view returns (uint256) {
+        if (!isActive[user]) return 0;
+        return block.timestamp - sessionStart[user];
+    }
+}

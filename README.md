@@ -655,3 +655,26 @@ contract Energy {
         return energy[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract BadgeCounter {
+    mapping(address => uint256) public badges;
+    address public minter;
+
+    event BadgeMinted(address indexed user, uint256 totalBadges);
+
+    constructor() {
+        minter = msg.sender;
+    }
+
+    function mintBadge(address user) external {
+        require(msg.sender == minter, "Not minter");
+        badges[user] += 1;
+        emit BadgeMinted(user, badges[user]);
+    }
+
+    function getBadges(address user) external view returns (uint256) {
+        return badges[user];
+    }
+}

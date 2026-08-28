@@ -586,3 +586,25 @@ contract Karma {
         return karma[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Attendance {
+    mapping(address => uint256) public attendanceCount;
+    mapping(address => uint256) public lastAttendance;
+
+    event Attended(address indexed user, uint256 total);
+
+    function attend() external {
+        uint256 today = block.timestamp / 1 days;
+        require(lastAttendance[msg.sender] != today, "Already attended today");
+
+        lastAttendance[msg.sender] = today;
+        attendanceCount[msg.sender] += 1;
+        emit Attended(msg.sender, attendanceCount[msg.sender]);
+    }
+
+    function getAttendance(address user) external view returns (uint256) {
+        return attendanceCount[user];
+    }
+}

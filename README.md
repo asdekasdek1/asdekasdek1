@@ -629,3 +629,29 @@ contract Cooldown {
         return next - block.timestamp;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Energy {
+    mapping(address => uint256) public energy;
+    uint256 public maxEnergy = 100;
+
+    event EnergyGained(address indexed user, uint256 amount);
+    event EnergySpent(address indexed user, uint256 amount);
+
+    function gainEnergy(uint256 amount) external {
+        require(energy[msg.sender] + amount <= maxEnergy, "Exceeds max");
+        energy[msg.sender] += amount;
+        emit EnergyGained(msg.sender, amount);
+    }
+
+    function spendEnergy(uint256 amount) external {
+        require(energy[msg.sender] >= amount, "Not enough energy");
+        energy[msg.sender] -= amount;
+        emit EnergySpent(msg.sender, amount);
+    }
+
+    function getEnergy(address user) external view returns (uint256) {
+        return energy[user];
+    }
+}

@@ -608,3 +608,24 @@ contract Attendance {
         return attendanceCount[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Cooldown {
+    mapping(address => uint256) public lastAction;
+    uint256 public cooldownTime = 1 hours;
+
+    event ActionPerformed(address indexed user, uint256 timestamp);
+
+    function performAction() external {
+        require(block.timestamp >= lastAction[msg.sender] + cooldownTime, "Cooldown active");
+        lastAction[msg.sender] = block.timestamp;
+        emit ActionPerformed(msg.sender, block.timestamp);
+    }
+
+    function timeLeft(address user) external view returns (uint256) {
+        uint256 next = lastAction[user] + cooldownTime;
+        if (block.timestamp >= next) return 0;
+        return next - block.timestamp;
+    }
+}

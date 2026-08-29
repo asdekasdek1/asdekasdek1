@@ -757,3 +757,25 @@ contract Combo {
         emit ComboReset(msg.sender);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Habit {
+    mapping(address => uint256) public habitCount;
+    mapping(address => uint256) public lastHabitDay;
+
+    event HabitLogged(address indexed user, uint256 total);
+
+    function logHabit() external {
+        uint256 today = block.timestamp / 1 days;
+        require(lastHabitDay[msg.sender] != today, "Already logged today");
+
+        lastHabitDay[msg.sender] = today;
+        habitCount[msg.sender] += 1;
+        emit HabitLogged(msg.sender, habitCount[msg.sender]);
+    }
+
+    function getHabitCount(address user) external view returns (uint256) {
+        return habitCount[user];
+    }
+}

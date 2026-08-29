@@ -859,3 +859,34 @@ contract DailyGoal {
         return progress[user] >= goal[user] && goal[user] > 0;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract StreakTracker {
+    mapping(address => uint256) public currentStreak;
+    mapping(address => uint256) public longestStreak;
+    mapping(address => uint256) public lastDay;
+
+    event StreakUpdated(address indexed user, uint256 current, uint256 longest);
+
+    function checkIn() external {
+        uint256 today = block.timestamp / 1 days;
+
+        if (lastDay[msg.sender] == today) {
+            return;
+        }
+
+        if (lastDay[msg.sender] + 1 == today) {
+            currentStreak[msg.sender] += 1;
+        } else {
+            currentStreak[msg.sender] = 1;
+        }
+
+        if (currentStreak[msg.sender] > longestStreak[msg.sender]) {
+            longestStreak[msg.sender] = currentStreak[msg.sender];
+        }
+
+        lastDay[msg.sender] = today;
+        emit StreakUpdated(msg.sender, currentStreak[msg.sender], longestStreak[msg.sender]);
+    }
+}

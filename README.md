@@ -732,3 +732,28 @@ contract Stamina {
         return stamina[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Combo {
+    mapping(address => uint256) public combo;
+    mapping(address => uint256) public lastAction;
+
+    event ComboIncreased(address indexed user, uint256 newCombo);
+    event ComboReset(address indexed user);
+
+    function action() external {
+        if (block.timestamp <= lastAction[msg.sender] + 1 minutes) {
+            combo[msg.sender] += 1;
+        } else {
+            combo[msg.sender] = 1;
+        }
+        lastAction[msg.sender] = block.timestamp;
+        emit ComboIncreased(msg.sender, combo[msg.sender]);
+    }
+
+    function resetCombo() external {
+        combo[msg.sender] = 0;
+        emit ComboReset(msg.sender);
+    }
+}

@@ -828,3 +828,34 @@ contract Quest {
         return completed[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract DailyGoal {
+    mapping(address => uint256) public goal;
+    mapping(address => uint256) public progress;
+    mapping(address => uint256) public lastDay;
+
+    event GoalSet(address indexed user, uint256 goal);
+    event ProgressAdded(address indexed user, uint256 amount, uint256 total);
+
+    function setGoal(uint256 _goal) external {
+        require(_goal > 0, "Goal must be > 0");
+        goal[msg.sender] = _goal;
+        emit GoalSet(msg.sender, _goal);
+    }
+
+    function addProgress(uint256 amount) external {
+        uint256 today = block.timestamp / 1 days;
+        if (lastDay[msg.sender] != today) {
+            lastDay[msg.sender] = today;
+            progress[msg.sender] = 0;
+        }
+        progress[msg.sender] += amount;
+        emit ProgressAdded(msg.sender, amount, progress[msg.sender]);
+    }
+
+    function isGoalReached(address user) external view returns (bool) {
+        return progress[user] >= goal[user] && goal[user] > 0;
+    }
+}

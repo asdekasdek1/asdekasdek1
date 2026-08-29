@@ -678,3 +678,31 @@ contract BadgeCounter {
         return badges[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract DailyLimit {
+    mapping(address => uint256) public dailySpent;
+    mapping(address => uint256) public lastDay;
+    uint256 public limit = 1 ether;
+
+    event Spent(address indexed user, uint256 amount, uint256 remaining);
+
+    function spend() external payable {
+        uint256 today = block.timestamp / 1 days;
+        if (lastDay[msg.sender] != today) {
+            lastDay[msg.sender] = today;
+            dailySpent[msg.sender] = 0;
+        }
+
+        require(dailySpent[msg.sender] + msg.value <= limit, "Daily limit exceeded");
+        dailySpent[msg.sender] += msg.value;
+        emit Spent(msg.sender, msg.value, limit - dailySpent[msg.sender]);
+    }
+
+    function getRemaining(address user) external view returns (uint256) {
+        uint256 today = block.timestamp / 1 days;
+        if (lastDay[user] != today) return limit;
+        return limit - dailySpent[user];
+    }
+}

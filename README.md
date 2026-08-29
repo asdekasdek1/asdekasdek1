@@ -779,3 +779,27 @@ contract Habit {
         return habitCount[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Momentum {
+    mapping(address => uint256) public momentum;
+    mapping(address => uint256) public lastUpdate;
+
+    event MomentumUpdated(address indexed user, uint256 value);
+
+    function update() external {
+        uint256 timePassed = block.timestamp - lastUpdate[msg.sender];
+        if (timePassed < 1 hours) {
+            momentum[msg.sender] += 1;
+        } else {
+            momentum[msg.sender] = 1;
+        }
+        lastUpdate[msg.sender] = block.timestamp;
+        emit MomentumUpdated(msg.sender, momentum[msg.sender]);
+    }
+
+    function getMomentum(address user) external view returns (uint256) {
+        return momentum[user];
+    }
+}

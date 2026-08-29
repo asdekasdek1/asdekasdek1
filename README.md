@@ -706,3 +706,29 @@ contract DailyLimit {
         return limit - dailySpent[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Stamina {
+    mapping(address => uint256) public stamina;
+    uint256 public maxStamina = 50;
+
+    event StaminaRecovered(address indexed user, uint256 amount);
+    event StaminaUsed(address indexed user, uint256 amount);
+
+    function recover(uint256 amount) external {
+        require(stamina[msg.sender] + amount <= maxStamina, "Exceeds max stamina");
+        stamina[msg.sender] += amount;
+        emit StaminaRecovered(msg.sender, amount);
+    }
+
+    function use(uint256 amount) external {
+        require(stamina[msg.sender] >= amount, "Not enough stamina");
+        stamina[msg.sender] -= amount;
+        emit StaminaUsed(msg.sender, amount);
+    }
+
+    function getStamina(address user) external view returns (uint256) {
+        return stamina[user];
+    }
+}

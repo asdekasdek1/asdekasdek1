@@ -803,3 +803,28 @@ contract Momentum {
         return momentum[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Quest {
+    mapping(address => bool) public completed;
+    mapping(address => uint256) public completedAt;
+    string public questName;
+
+    event QuestCompleted(address indexed user, uint256 timestamp);
+
+    constructor(string memory _questName) {
+        questName = _questName;
+    }
+
+    function complete() external {
+        require(!completed[msg.sender], "Already completed");
+        completed[msg.sender] = true;
+        completedAt[msg.sender] = block.timestamp;
+        emit QuestCompleted(msg.sender, block.timestamp);
+    }
+
+    function isCompleted(address user) external view returns (bool) {
+        return completed[user];
+    }
+}

@@ -1042,3 +1042,22 @@ contract Flame {
         return flame[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract EchoPulse {
+    mapping(address => uint256) public pulses;
+    mapping(address => uint256) public lastPulseTime;
+
+    event Pulsed(address indexed user, uint256 total);
+
+    function pulse() external {
+        lastPulseTime[msg.sender] = block.timestamp;
+        pulses[msg.sender] += 1;
+        emit Pulsed(msg.sender, pulses[msg.sender]);
+    }
+
+    function getPulse(address user) external view returns (uint256 count, uint256 lastTime) {
+        return (pulses[user], lastPulseTime[user]);
+    }
+}

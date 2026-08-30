@@ -890,3 +890,23 @@ contract StreakTracker {
         emit StreakUpdated(msg.sender, currentStreak[msg.sender], longestStreak[msg.sender]);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract LevelUp {
+    mapping(address => uint256) public xp;
+    mapping(address => uint256) public level;
+
+    event XpGained(address indexed user, uint256 amount, uint256 newLevel);
+
+    function gainXp(uint256 amount) external {
+        xp[msg.sender] += amount;
+        uint256 newLevel = xp[msg.sender] / 50;
+        level[msg.sender] = newLevel;
+        emit XpGained(msg.sender, amount, newLevel);
+    }
+
+    function getStats(address user) external view returns (uint256, uint256) {
+        return (xp[user], level[user]);
+    }
+}

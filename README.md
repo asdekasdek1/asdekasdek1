@@ -1019,3 +1019,26 @@ contract Spark {
         return sparks[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Flame {
+    mapping(address => uint256) public flame;
+    mapping(address => uint256) public lastIgnite;
+
+    event Ignited(address indexed user, uint256 level);
+
+    function ignite() external {
+        if (block.timestamp <= lastIgnite[msg.sender] + 30 minutes) {
+            flame[msg.sender] += 1;
+        } else {
+            flame[msg.sender] = 1;
+        }
+        lastIgnite[msg.sender] = block.timestamp;
+        emit Ignited(msg.sender, flame[msg.sender]);
+    }
+
+    function getFlame(address user) external view returns (uint256) {
+        return flame[user];
+    }
+}

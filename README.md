@@ -910,3 +910,23 @@ contract LevelUp {
         return (xp[user], level[user]);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Achievement {
+    mapping(address => mapping(string => bool)) public achievements;
+    mapping(address => uint256) public totalAchievements;
+
+    event AchievementUnlocked(address indexed user, string achievement);
+
+    function unlock(string calldata name) external {
+        require(!achievements[msg.sender][name], "Already unlocked");
+        achievements[msg.sender][name] = true;
+        totalAchievements[msg.sender] += 1;
+        emit AchievementUnlocked(msg.sender, name);
+    }
+
+    function hasAchievement(address user, string calldata name) external view returns (bool) {
+        return achievements[user][name];
+    }
+}

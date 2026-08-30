@@ -930,3 +930,25 @@ contract Achievement {
         return achievements[user][name];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract DailyXP {
+    mapping(address => uint256) public xp;
+    mapping(address => uint256) public lastClaimDay;
+
+    event XpClaimed(address indexed user, uint256 amount, uint256 totalXp);
+
+    function claimDailyXP() external {
+        uint256 today = block.timestamp / 1 days;
+        require(lastClaimDay[msg.sender] != today, "Already claimed today");
+
+        lastClaimDay[msg.sender] = today;
+        xp[msg.sender] += 10;
+        emit XpClaimed(msg.sender, 10, xp[msg.sender]);
+    }
+
+    function getXP(address user) external view returns (uint256) {
+        return xp[user];
+    }
+}

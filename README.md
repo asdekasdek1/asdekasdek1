@@ -952,3 +952,31 @@ contract DailyXP {
         return xp[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract FocusTimer {
+    mapping(address => uint256) public startTime;
+    mapping(address => uint256) public totalTime;
+
+    event FocusStarted(address indexed user, uint256 timestamp);
+    event FocusStopped(address indexed user, uint256 duration);
+
+    function start() external {
+        require(startTime[msg.sender] == 0, "Already started");
+        startTime[msg.sender] = block.timestamp;
+        emit FocusStarted(msg.sender, block.timestamp);
+    }
+
+    function stop() external {
+        require(startTime[msg.sender] != 0, "Not started");
+        uint256 duration = block.timestamp - startTime[msg.sender];
+        totalTime[msg.sender] += duration;
+        startTime[msg.sender] = 0;
+        emit FocusStopped(msg.sender, duration);
+    }
+
+    function getTotalTime(address user) external view returns (uint256) {
+        return totalTime[user];
+    }
+}

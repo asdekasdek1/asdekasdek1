@@ -980,3 +980,22 @@ contract FocusTimer {
         return totalTime[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Pulse {
+    mapping(address => uint256) public lastPulse;
+    mapping(address => uint256) public pulseCount;
+
+    event Pulsed(address indexed user, uint256 count, uint256 timestamp);
+
+    function pulse() external {
+        lastPulse[msg.sender] = block.timestamp;
+        pulseCount[msg.sender] += 1;
+        emit Pulsed(msg.sender, pulseCount[msg.sender], block.timestamp);
+    }
+
+    function getPulseInfo(address user) external view returns (uint256 last, uint256 count) {
+        return (lastPulse[user], pulseCount[user]);
+    }
+}

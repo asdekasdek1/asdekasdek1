@@ -1081,3 +1081,26 @@ contract SparkLine {
         return sparks[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Aura {
+    mapping(address => uint256) public aura;
+    mapping(address => uint256) public lastAura;
+
+    event AuraGained(address indexed user, uint256 level);
+
+    function gainAura() external {
+        if (block.timestamp <= lastAura[msg.sender] + 10 minutes) {
+            aura[msg.sender] += 1;
+        } else {
+            aura[msg.sender] = 1;
+        }
+        lastAura[msg.sender] = block.timestamp;
+        emit AuraGained(msg.sender, aura[msg.sender]);
+    }
+
+    function getAura(address user) external view returns (uint256) {
+        return aura[user];
+    }
+}

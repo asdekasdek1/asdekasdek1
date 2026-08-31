@@ -1061,3 +1061,23 @@ contract EchoPulse {
         return (pulses[user], lastPulseTime[user]);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract SparkLine {
+    mapping(address => uint256) public sparks;
+    mapping(address => uint256) public lastSpark;
+
+    event Sparked(address indexed user, uint256 total);
+
+    function spark() external {
+        require(block.timestamp >= lastSpark[msg.sender] + 5 minutes, "Cooldown");
+        lastSpark[msg.sender] = block.timestamp;
+        sparks[msg.sender] += 1;
+        emit Sparked(msg.sender, sparks[msg.sender]);
+    }
+
+    function getSparks(address user) external view returns (uint256) {
+        return sparks[user];
+    }
+}

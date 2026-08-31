@@ -1150,3 +1150,26 @@ contract Wave {
         return waves[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Surge {
+    mapping(address => uint256) public surge;
+    mapping(address => uint256) public lastSurge;
+
+    event Surged(address indexed user, uint256 level);
+
+    function surgeUp() external {
+        if (block.timestamp <= lastSurge[msg.sender] + 6 minutes) {
+            surge[msg.sender] += 1;
+        } else {
+            surge[msg.sender] = 1;
+        }
+        lastSurge[msg.sender] = block.timestamp;
+        emit Surged(msg.sender, surge[msg.sender]);
+    }
+
+    function getSurge(address user) external view returns (uint256) {
+        return surge[user];
+    }
+}

@@ -1311,3 +1311,26 @@ contract Pulse {
         return pulses[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Echo {
+    mapping(address => uint256) public echoes;
+    mapping(address => uint256) public lastEcho;
+
+    event Echoed(address indexed user, uint256 level);
+
+    function echo() external {
+        if (block.timestamp <= lastEcho[msg.sender] + 7 minutes) {
+            echoes[msg.sender] += 1;
+        } else {
+            echoes[msg.sender] = 1;
+        }
+        lastEcho[msg.sender] = block.timestamp;
+        emit Echoed(msg.sender, echoes[msg.sender]);
+    }
+
+    function getEchoes(address user) external view returns (uint256) {
+        return echoes[user];
+    }
+}

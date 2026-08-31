@@ -1219,3 +1219,26 @@ contract Ripple {
         return ripples[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Bloom {
+    mapping(address => uint256) public blooms;
+    mapping(address => uint256) public lastBloom;
+
+    event Bloomed(address indexed user, uint256 level);
+
+    function bloom() external {
+        if (block.timestamp <= lastBloom[msg.sender] + 13 minutes) {
+            blooms[msg.sender] += 1;
+        } else {
+            blooms[msg.sender] = 1;
+        }
+        lastBloom[msg.sender] = block.timestamp;
+        emit Bloomed(msg.sender, blooms[msg.sender]);
+    }
+
+    function getBlooms(address user) external view returns (uint256) {
+        return blooms[user];
+    }
+}

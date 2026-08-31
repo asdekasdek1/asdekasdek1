@@ -1196,3 +1196,26 @@ contract Flux {
         return flux[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Ripple {
+    mapping(address => uint256) public ripples;
+    mapping(address => uint256) public lastRipple;
+
+    event Rippled(address indexed user, uint256 total);
+
+    function ripple() external {
+        if (block.timestamp <= lastRipple[msg.sender] + 4 minutes) {
+            ripples[msg.sender] += 1;
+        } else {
+            ripples[msg.sender] = 1;
+        }
+        lastRipple[msg.sender] = block.timestamp;
+        emit Rippled(msg.sender, ripples[msg.sender]);
+    }
+
+    function getRipples(address user) external view returns (uint256) {
+        return ripples[user];
+    }
+}

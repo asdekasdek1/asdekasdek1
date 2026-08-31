@@ -1173,3 +1173,26 @@ contract Surge {
         return surge[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Flux {
+    mapping(address => uint256) public flux;
+    mapping(address => uint256) public lastFlux;
+
+    event Fluxed(address indexed user, uint256 level);
+
+    function fluxUp() external {
+        if (block.timestamp <= lastFlux[msg.sender] + 11 minutes) {
+            flux[msg.sender] += 1;
+        } else {
+            flux[msg.sender] = 1;
+        }
+        lastFlux[msg.sender] = block.timestamp;
+        emit Fluxed(msg.sender, flux[msg.sender]);
+    }
+
+    function getFlux(address user) external view returns (uint256) {
+        return flux[user];
+    }
+}

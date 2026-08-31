@@ -1104,3 +1104,26 @@ contract Aura {
         return aura[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Orbit {
+    mapping(address => uint256) public orbit;
+    mapping(address => uint256) public lastOrbit;
+
+    event Orbited(address indexed user, uint256 level);
+
+    function orbitNow() external {
+        if (block.timestamp <= lastOrbit[msg.sender] + 8 minutes) {
+            orbit[msg.sender] += 1;
+        } else {
+            orbit[msg.sender] = 1;
+        }
+        lastOrbit[msg.sender] = block.timestamp;
+        emit Orbited(msg.sender, orbit[msg.sender]);
+    }
+
+    function getOrbit(address user) external view returns (uint256) {
+        return orbit[user];
+    }
+}

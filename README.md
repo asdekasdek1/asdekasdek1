@@ -1242,3 +1242,26 @@ contract Bloom {
         return blooms[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Volt {
+    mapping(address => uint256) public volts;
+    mapping(address => uint256) public lastVolt;
+
+    event VoltGained(address indexed user, uint256 level);
+
+    function charge() external {
+        if (block.timestamp <= lastVolt[msg.sender] + 9 minutes) {
+            volts[msg.sender] += 1;
+        } else {
+            volts[msg.sender] = 1;
+        }
+        lastVolt[msg.sender] = block.timestamp;
+        emit VoltGained(msg.sender, volts[msg.sender]);
+    }
+
+    function getVolts(address user) external view returns (uint256) {
+        return volts[user];
+    }
+}

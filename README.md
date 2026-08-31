@@ -1127,3 +1127,26 @@ contract Orbit {
         return orbit[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Wave {
+    mapping(address => uint256) public waves;
+    mapping(address => uint256) public lastWave;
+
+    event Waved(address indexed user, uint256 total);
+
+    function wave() external {
+        if (block.timestamp <= lastWave[msg.sender] + 7 minutes) {
+            waves[msg.sender] += 1;
+        } else {
+            waves[msg.sender] = 1;
+        }
+        lastWave[msg.sender] = block.timestamp;
+        emit Waved(msg.sender, waves[msg.sender]);
+    }
+
+    function getWaves(address user) external view returns (uint256) {
+        return waves[user];
+    }
+}

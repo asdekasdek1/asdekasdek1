@@ -1587,3 +1587,26 @@ contract BoltCore {
         return bolts[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract NovaCore {
+    mapping(address => uint256) public novas;
+    mapping(address => uint256) public lastNova;
+
+    event NovaActivated(address indexed user, uint256 level);
+
+    function activate() external {
+        if (block.timestamp <= lastNova[msg.sender] + 7 minutes) {
+            novas[msg.sender] += 1;
+        } else {
+            novas[msg.sender] = 1;
+        }
+        lastNova[msg.sender] = block.timestamp;
+        emit NovaActivated(msg.sender, novas[msg.sender]);
+    }
+
+    function getNovas(address user) external view returns (uint256) {
+        return novas[user];
+    }
+}

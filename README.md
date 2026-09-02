@@ -1518,3 +1518,26 @@ contract SparkCore {
         return sparks[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract FluxCore {
+    mapping(address => uint256) public fluxes;
+    mapping(address => uint256) public lastFlux;
+
+    event Fluxed(address indexed user, uint256 level);
+
+    function flux() external {
+        if (block.timestamp <= lastFlux[msg.sender] + 8 minutes) {
+            fluxes[msg.sender] += 1;
+        } else {
+            fluxes[msg.sender] = 1;
+        }
+        lastFlux[msg.sender] = block.timestamp;
+        emit Fluxed(msg.sender, fluxes[msg.sender]);
+    }
+
+    function getFluxes(address user) external view returns (uint256) {
+        return fluxes[user];
+    }
+}

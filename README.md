@@ -1748,3 +1748,26 @@ contract GlowLite {
         return glows[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract BoltLite {
+    mapping(address => uint256) public bolts;
+    mapping(address => uint256) public lastBolt;
+
+    event Bolted(address indexed user, uint256 level);
+
+    function bolt() external {
+        if (block.timestamp <= lastBolt[msg.sender] + 7 minutes) {
+            bolts[msg.sender] += 1;
+        } else {
+            bolts[msg.sender] = 1;
+        }
+        lastBolt[msg.sender] = block.timestamp;
+        emit Bolted(msg.sender, bolts[msg.sender]);
+    }
+
+    function getBolts(address user) external view returns (uint256) {
+        return bolts[user];
+    }
+}

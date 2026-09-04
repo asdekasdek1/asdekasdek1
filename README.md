@@ -1886,3 +1886,26 @@ contract FlameMini {
         return flames[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract PulseMini {
+    mapping(address => uint256) public pulses;
+    mapping(address => uint256) public lastPulse;
+
+    event Pulsed(address indexed user, uint256 level);
+
+    function pulse() external {
+        if (block.timestamp <= lastPulse[msg.sender] + 7 minutes) {
+            pulses[msg.sender] += 1;
+        } else {
+            pulses[msg.sender] = 1;
+        }
+        lastPulse[msg.sender] = block.timestamp;
+        emit Pulsed(msg.sender, pulses[msg.sender]);
+    }
+
+    function getPulses(address user) external view returns (uint256) {
+        return pulses[user];
+    }
+}

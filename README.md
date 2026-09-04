@@ -1955,3 +1955,26 @@ contract NovaMini {
         return novas[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract AuraMini {
+    mapping(address => uint256) public auras;
+    mapping(address => uint256) public lastAura;
+
+    event AuraGained(address indexed user, uint256 level);
+
+    function gain() external {
+        if (block.timestamp <= lastAura[msg.sender] + 8 minutes) {
+            auras[msg.sender] += 1;
+        } else {
+            auras[msg.sender] = 1;
+        }
+        lastAura[msg.sender] = block.timestamp;
+        emit AuraGained(msg.sender, auras[msg.sender]);
+    }
+
+    function getAuras(address user) external view returns (uint256) {
+        return auras[user];
+    }
+}

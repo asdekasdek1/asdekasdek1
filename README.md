@@ -1840,3 +1840,26 @@ contract AuraLite {
         return auras[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract SparkMini {
+    mapping(address => uint256) public sparks;
+    mapping(address => uint256) public lastSpark;
+
+    event Sparked(address indexed user, uint256 level);
+
+    function spark() external {
+        if (block.timestamp <= lastSpark[msg.sender] + 5 minutes) {
+            sparks[msg.sender] += 1;
+        } else {
+            sparks[msg.sender] = 1;
+        }
+        lastSpark[msg.sender] = block.timestamp;
+        emit Sparked(msg.sender, sparks[msg.sender]);
+    }
+
+    function getSparks(address user) external view returns (uint256) {
+        return sparks[user];
+    }
+}
